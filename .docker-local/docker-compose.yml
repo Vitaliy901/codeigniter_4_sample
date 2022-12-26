@@ -1,0 +1,71 @@
+services:
+  db-igniter:
+    build: conf/pgsql
+    restart: always
+    user: root
+    environment:
+      - POSTGRES_DB=${database_default_database}
+      - POSTGRES_USER=${database_default_username}
+      - POSTGRES_PASSWORD=${database_default_password}
+    expose:
+      - 5432
+    volumes:
+      - ./conf/pgsql/db-data:/var/lib/postgresql/data
+      - ./conf/pgsql/postgres.conf:/etc/postgresql/postgresql.conf
+  db-igniter-test:
+    build: conf/pgsql
+    restart: always
+    user: root
+    environment:
+      - POSTGRES_DB=${database_default_database}
+      - POSTGRES_USER=${database_default_username}
+      - POSTGRES_PASSWORD=${database_default_password}
+    expose:
+      - 5432
+  nginx-igniter:
+    image: nginx:1.21.4-alpine
+    volumes:
+      - ../:/var/www
+      - ./conf/nginx/conf.d:/etc/nginx/conf.d
+      - ../writable/logs/nginx:/var/log/nginx
+    ports:
+      - 80:80
+    depends_on:
+      - igniter
+  igniter:
+    build: conf/php
+    restart: always
+    expose:
+      - 6001
+    volumes:
+      - ..:/var/www
+    depends_on:
+      - db-igniter
+      - db-igniter-test
+      - redis-igniter
+    logging:
+      driver: "json-file"
+      options:
+        max-file: 5
+        max-size: 10m
+  redis-igniter:
+    build: conf/redis
+    restart: always
+    expose:
+      - 6379
+    volumes:
+      - ./conf/redis/db-data:/data
+      - ./conf/redis/redis.conf:/usr/local/etc/redis/redis.conf
+  adminer-igniter:
+    build: conf/adminer
+    environment:
+      - ADMINER_DEFAULT_SERVER=${database_default_hostname}
+      - ADMINER_DEFAULT_USER=${database_default_username}
+      - ADMINER_DEFAULT_PASSWORD=${database_default_password}
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - /sessions
+    depends_on:
+      - db-igniter
