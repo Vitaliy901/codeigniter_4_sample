@@ -12,7 +12,9 @@ RUN apt-get update && apt-get install -y \
     libicu-dev\
     git && \
     pecl install igbinary && \
+    pecl install xdebug && \
     docker-php-ext-enable igbinary && \
+    docker-php-ext-enable xdebug && \
     pecl install redis && \
     pecl install imagick && \
     docker-php-ext-enable imagick && \

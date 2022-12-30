@@ -2,6 +2,11 @@
 
 namespace Config;
 
+use App\Filters\Pagination;
+use App\Filters\StripTags;
+use App\Filters\Trim;
+use App\Filters\UserCreate;
+use App\Filters\UserUpdate;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -18,11 +23,17 @@ class Filters extends BaseConfig
      * @var array
      */
     public $aliases = [
-        'csrf'          => CSRF::class,
-        'toolbar'       => DebugToolbar::class,
-        'honeypot'      => Honeypot::class,
-        'invalidchars'  => InvalidChars::class,
+        'csrf' => CSRF::class,
+        'toolbar' => DebugToolbar::class,
+        'honeypot' => Honeypot::class,
+        'invalidchars' => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'user_create' => UserCreate::class,
+        'user_update' => UserUpdate::class,
+        'baseInputFilter' => [
+            Trim::class,
+            StripTags::class
+        ]
     ];
 
     /**
@@ -33,6 +44,7 @@ class Filters extends BaseConfig
      */
     public $globals = [
         'before' => [
+            'baseInputFilter'
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
@@ -68,5 +80,12 @@ class Filters extends BaseConfig
      *
      * @var array
      */
-    public $filters = [];
+    public $filters = [
+        'user_create' => [
+            'before' => ['api/v1/users']
+        ],
+        'user_update' => [
+            'before' => ['api/v1/users/*']
+        ],
+    ];
 }

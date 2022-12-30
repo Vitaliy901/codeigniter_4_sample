@@ -3,6 +3,9 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseService;
+use Config\Services as AppServices;
+use Config\Validation as ValidationConfig;
+use App\Modifications\Validation;
 
 /**
  * Services Configuration file.
@@ -29,4 +32,15 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+    public static function validation(?ValidationConfig $config = null, bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('validation', $config);
+        }
+
+        $config ??= config('Validation');
+
+        return new Validation($config, AppServices::renderer());
+    }
 }
