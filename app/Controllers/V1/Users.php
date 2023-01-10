@@ -29,7 +29,7 @@ class Users extends ResourceController
     public function create()
     {
         $credetials = $this->request->getJSON(true);
-        $credetials['password'] = password_hash($credetials['password'], PASSWORD_BCRYPT);
+        $credetials['password'] = password_hash($credetials['password'], PASSWORD_DEFAULT);
         $id = $this->model->insert($credetials);
 
         return $this->respond(['user' => $this->model->find($id)]);
@@ -45,7 +45,7 @@ class Users extends ResourceController
         $credetials = $this->request->getJSON(true);
         !isset($credetials['password']) ?: $credetials['password'] = password_hash($credetials['password'], PASSWORD_BCRYPT);
 
-        $this->model->update($id,$credetials);
+        $this->model->update($id, $credetials);
         return $this->respond(['user' => $this->model->find($id)]);
     }
 

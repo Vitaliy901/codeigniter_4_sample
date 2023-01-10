@@ -5,8 +5,9 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use Config\Services;
 
-class StripTags implements FilterInterface
+class UserLogin implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -25,13 +26,23 @@ class StripTags implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $credentials = $request->getJSON(true);
-        if (isset($credentials)) {
-            $result = array_map(function ($value) {
-                return strip_tags($value);
-            }, $credentials);
-            $request->setBody(json_encode($result));
+        if ($request->getMethod() === 'post') {
+            $validator = Services::validation();
+            $rules = [
+                'email' => 'required|valid_email',
+                'password' => 'required|alpha_numeric_punct|min_length[3]|max_length[80]',
+            ];
+
+            if (!$validator->validate($rules, $request)) {
+                return Services::response()->setStatusCode(403)->setJSON([
+                    'errors' => $validator->getErrors()
+                ]);
+            }
+
+            $validCred = $validator->validated();
+            $request->setBody(json_encode($validCred));
         }
+        return $request;
     }
 
     /**

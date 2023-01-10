@@ -33,6 +33,11 @@ class Services extends BaseService
      * }
      */
 
+    public static function authManager(bool $getShared = true)
+    {
+        // to do...
+    }
+
     public static function validation(?ValidationConfig $config = null, bool $getShared = true)
     {
         if ($getShared) {

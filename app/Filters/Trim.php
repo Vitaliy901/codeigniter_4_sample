@@ -26,10 +26,12 @@ class Trim implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         $credentials = $request->getJSON(true);
-        $result = array_map(function ($value) {
-            return trim($value);
-        }, $credentials);
-        $request->setBody(json_encode($result));
+        if (isset($credentials)) {
+            $result = array_map(function ($value) {
+                return trim($value);
+            }, $credentials);
+            $request->setBody(json_encode($result));
+        }
     }
 
     /**

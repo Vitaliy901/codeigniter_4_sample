@@ -2,6 +2,8 @@
 
 namespace Config;
 
+use App\Controllers\V1\AuthController;
+
 // Create a new instance of our RouteCollection class.
 
 $routes = Services::routes();
@@ -17,7 +19,7 @@ if (is_file(SYSTEMPATH . 'Config/Routes.php')) {
  * Router Setup
  * --------------------------------------------------------------------
  */
-/*$routes->setDefaultNamespace('App\Controllers\v1');
+/*$routes->setDefaultNamespace('App\Controllers\V1');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
@@ -36,11 +38,15 @@ $routes->set404Override();*/
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->group('api/v1', ['namespace' => 'App\Controllers\v1'], static function ($routes) {
+$routes->group('api/v1', ['namespace' => 'App\Controllers\V1'], static function ($routes) {
     $routes->resource('users', [
         'only' => 'index,create,show,update,delete',
-        'placeholder' => '(:num)'
+        'placeholder' => '(:num)',
+        'filter' => 'auth'
     ]);
+
+    $routes->post('auth/register', [AuthController::class, 'register'], ['filter' => 'user_register']);
+    $routes->post('auth/login', [AuthController::class, 'login'], ['filter' => 'user_login']);
 });
 
 
