@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filters;
+namespace App\Filters\User;
 
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
 
-class UserCreate implements FilterInterface
+class UserRegister implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -24,7 +24,7 @@ class UserCreate implements FilterInterface
      *
      * @return mixed
      */
-    public function before(RequestInterface $request, $arguments = null): mixed
+    public function before(RequestInterface $request, $arguments = null)
     {
         if ($request->getMethod() === 'post') {
             $validator = Services::validation();
@@ -33,7 +33,6 @@ class UserCreate implements FilterInterface
                 'last_name' => 'required|min_length[3]|max_length[100]|alpha',
                 'email' => 'required|valid_email|is_unique[users.email]',
                 'password' => 'required|alpha_numeric_punct|min_length[3]|max_length[80]',
-                'role' => 'required|min_length[3]|max_length[50]|alpha'
             ];
 
             if (!$validator->validate($rules, $request)) {

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filters;
+namespace App\Filters\Team;
 
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
 
-class UserLogin implements FilterInterface
+class TeamUpdate implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -26,14 +26,17 @@ class UserLogin implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if ($request->getMethod() === 'post') {
+        $segments = $request->getUri()->getSegments();
+        $id = array_pop($segments);
+        if ($request->getMethod() === 'put' || $request->getMethod() === 'patch') {
             $validator = Services::validation();
             $rules = [
-                'email' => 'required|valid_email',
-                'password' => 'required|alpha_numeric_punct|min_length[3]|max_length[80]',
+                'name' => ['min_length[3]', 'max_length[100]', 'string', "is_unique[teams.name,id,{$id}]"],
+                'url' => ['min_length[3]', 'max_length[100]', 'string', "is_unique[teams.url,id,{$id}]"],
             ];
+            $currentRules = array_intersect_key($rules, $request->getJSON(true));
 
-            if (!$validator->validate($rules, $request)) {
+            if (!$validator->validate($currentRules, $request)) {
                 return Services::response()->setStatusCode(403)->setJSON([
                     'errors' => $validator->getErrors()
                 ]);

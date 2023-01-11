@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filters;
+namespace App\Filters\User;
 
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;

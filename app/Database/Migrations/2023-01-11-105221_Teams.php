@@ -34,7 +34,7 @@ class Teams extends Migration
             ],
             'deleted_at' => [
                 'type' => 'TIMESTAMP',
-                'null' => false,
+                'null' => true,
             ],
         ])
             ->addPrimaryKey('id', TRUE)

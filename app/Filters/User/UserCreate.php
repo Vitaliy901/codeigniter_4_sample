@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filters;
+namespace App\Filters\User;
 
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
 
-class Auth implements FilterInterface
+class UserCreate implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -24,12 +24,28 @@ class Auth implements FilterInterface
      *
      * @return mixed
      */
-    public function before(RequestInterface $request, $arguments = null)
+    public function before(RequestInterface $request, $arguments = null): mixed
     {
-        $auth = service('authManager')->auth();
-        if (!$auth) {
-            return Services::response()->setStatusCode(403);
+        if ($request->getMethod() === 'post') {
+            $validator = Services::validation();
+            $rules = [
+                'first_name' => 'required|min_length[3]|max_length[100]|alpha',
+                'last_name' => 'required|min_length[3]|max_length[100]|alpha',
+                'email' => 'required|valid_email|is_unique[users.email]',
+                'password' => 'required|alpha_numeric_punct|min_length[3]|max_length[80]',
+                'role' => 'required|min_length[3]|max_length[50]|alpha'
+            ];
+
+            if (!$validator->validate($rules, $request)) {
+                return Services::response()->setStatusCode(403)->setJSON([
+                    'errors' => $validator->getErrors()
+                ]);
+            }
+
+            $validCred = $validator->validated();
+            $request->setBody(json_encode($validCred));
         }
+        return $request;
     }
 
     /**

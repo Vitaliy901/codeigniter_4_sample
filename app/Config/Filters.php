@@ -4,11 +4,13 @@ namespace Config;
 
 use App\Filters\Auth;
 use App\Filters\StripTags;
+use App\Filters\Team\TeamCreate;
+use App\Filters\Team\TeamUpdate;
 use App\Filters\Trim;
-use App\Filters\UserCreate;
-use App\Filters\UserLogin;
-use App\Filters\UserRegister;
-use App\Filters\UserUpdate;
+use App\Filters\User\UserCreate;
+use App\Filters\User\UserLogin;
+use App\Filters\User\UserRegister;
+use App\Filters\User\UserUpdate;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -34,6 +36,8 @@ class Filters extends BaseConfig
         'user_update' => UserUpdate::class,
         'user_register' => UserRegister::class,
         'user_login' => UserLogin::class,
+        'team_create' => TeamCreate::class,
+        'team_update' => TeamUpdate::class,
         'auth' => Auth::class,
         'baseInputFilter' => [
             Trim::class,
@@ -86,11 +90,20 @@ class Filters extends BaseConfig
      * @var array
      */
     public $filters = [
+        'auth' => [
+            'before' => ['api/v1/users', 'api/v1/teams']
+        ],
         'user_create' => [
-            'before' => ['api/V1/users']
+            'before' => ['api/v1/users']
         ],
         'user_update' => [
-            'before' => ['api/V1/users/*']
+            'before' => ['api/v1/users/*']
+        ],
+        'team_create' => [
+            'before' => ['api/v1/teams']
+        ],
+        'team_update' => [
+            'before' => ['api/v1/teams/*']
         ],
     ];
 }

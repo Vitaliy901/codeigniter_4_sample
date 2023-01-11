@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filters;
+namespace App\Filters\Team;
 
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
 
-class UserRegister implements FilterInterface
+class TeamCreate implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -29,10 +29,8 @@ class UserRegister implements FilterInterface
         if ($request->getMethod() === 'post') {
             $validator = Services::validation();
             $rules = [
-                'first_name' => 'required|min_length[3]|max_length[100]|alpha',
-                'last_name' => 'required|min_length[3]|max_length[100]|alpha',
-                'email' => 'required|valid_email|is_unique[users.email]',
-                'password' => 'required|alpha_numeric_punct|min_length[3]|max_length[80]',
+                'name' => 'required|min_length[3]|max_length[100]|string|is_unique[teams.name,deleted_at]',
+                'url' => 'required|min_length[3]|max_length[100]|string|is_unique[teams.url]',
             ];
 
             if (!$validator->validate($rules, $request)) {
