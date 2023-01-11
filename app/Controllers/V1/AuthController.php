@@ -33,8 +33,7 @@ class AuthController extends BaseController
                 $payload = [
                     'iss' => getenv('app_baseURL'),
                     'exp' => time() + 60 * 60 * 24 * 7,
-                    'id' => $user->id,
-                    'role' => $user->role,
+                    'id' => $user->id
                 ];
                 $jwt = JWT::encode($payload, $key, 'HS256');
 
@@ -48,9 +47,5 @@ class AuthController extends BaseController
             'user' =>  [],
             'status' => 'Not found',
         ])->setStatusCode(404);
-    }
-
-    public function logout()
-    {
     }
 }

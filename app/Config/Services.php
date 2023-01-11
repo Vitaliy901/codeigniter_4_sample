@@ -35,7 +35,11 @@ class Services extends BaseService
 
     public static function authManager(bool $getShared = true)
     {
-        // to do...
+        if ($getShared) {
+            return static::getSharedInstance('authManager');
+        }
+
+        return new \App\Config\AuthManager;
     }
 
     public static function validation(?ValidationConfig $config = null, bool $getShared = true)

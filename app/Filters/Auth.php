@@ -5,9 +5,7 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use RuntimeException;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use Config\Services;
 
 class Auth implements FilterInterface
 {
@@ -28,18 +26,8 @@ class Auth implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $key = getenv('jwt_key');
-        $header = $request->getHeader('Authorization');
-
-        if ($header) {
-            $token = trim(strstr($header->getValue(), ' '));
-            $data = JWT::decode($token, new Key($key, 'HS256'));
-
-            $time = time();
-            $builder = \Config\Database::connect()->table('users');
-            return !($builder->where('id', $data->id) && $data->exp < $time) ?: $request;
-        }
-        throw new RuntimeException('Authorization header is not exists');
+        $auth = service('authManager')->auth();
+        return $auth ?: Services::response()->setStatusCode(403);
     }
 
     /**

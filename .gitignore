@@ -125,3 +125,6 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+/.docker-local/conf/pgsql/db-data/*
+/.docker-local/conf/pgsql/db-data-test/*
+/.docker-local/conf/redis/db-data/*
