@@ -3,7 +3,7 @@
 namespace App\Controllers\V1;
 
 use App\Controllers\BaseController;
-use App\Models\User;
+use App\Models\UserModel;
 use Firebase\JWT\JWT;
 
 class AuthController extends BaseController
@@ -12,7 +12,7 @@ class AuthController extends BaseController
     {
         $credentials = $this->request->getJSON(true);
         $credentials['password'] = password_hash($credentials['password'], PASSWORD_DEFAULT);
-        $user = model(User::class);
+        $user = model(UserModel::class);
 
         $id = $user->insert($credentials);
 
@@ -24,7 +24,7 @@ class AuthController extends BaseController
     public function login()
     {
         $credentials = $this->request->getJSON(true);
-        $userModel = model(User::class);
+        $userModel = model(UserModel::class);
         $user = $userModel->where('email', $credentials['email'])->first();
 
         if ($user) {

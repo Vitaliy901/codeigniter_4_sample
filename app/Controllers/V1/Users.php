@@ -6,7 +6,7 @@ use CodeIgniter\RESTful\ResourceController;
 
 class Users extends ResourceController
 {
-    protected $modelName = 'App\Models\User';
+    protected $modelName = 'App\Models\UserModel';
     protected $format = 'json';
 
     public function index()

@@ -2,7 +2,7 @@
 
 namespace App\Config;
 
-use App\Models\User;
+use App\Models\UserModel;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use RuntimeException;
@@ -25,7 +25,7 @@ class AuthManager
         } catch (\Exception $e) {
             throw new RuntimeException('Unauthorized ', 401);
         }
-        $user = model(User::class)->find($data->id);
+        $user = model(UserModel::class)->find($data->id);
 
         $this->user = ($user && $data->exp > time()) ? $user : null;
     }
