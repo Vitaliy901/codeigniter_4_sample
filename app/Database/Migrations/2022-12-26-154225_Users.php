@@ -52,7 +52,9 @@ class Users extends Migration
                 'type' => 'TIMESTAMP',
                 'null' => false,
             ],
-        ])->createTable('users');
+        ])
+            ->addPrimaryKey('id', TRUE)
+            ->createTable('users');
     }
 
     public function down()
