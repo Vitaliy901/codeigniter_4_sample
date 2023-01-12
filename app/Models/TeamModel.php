@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entities\Team;
 use CodeIgniter\Model;
 
 class TeamModel extends Model
@@ -11,7 +12,7 @@ class TeamModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
-    protected $returnType       = 'object';
+    protected $returnType       =  Team::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [

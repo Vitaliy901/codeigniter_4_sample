@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Entities\Member;
+use App\Entities\User;
 use CodeIgniter\Model;
 
 class UserModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'users';
-    protected $returnType       = 'object';
+    protected $returnType       =  User::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -42,4 +44,14 @@ class UserModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public Member $member;
+
+    public function getMemberByUser(int $id)
+    {
+        $this->member = model(MemberModel::class)
+            ->where('user_id', $id)
+            ->first();
+        return $this->member;
+    }
 }

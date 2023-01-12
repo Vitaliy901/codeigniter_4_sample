@@ -3,6 +3,8 @@
 namespace Config;
 
 use App\Filters\Auth;
+use App\Filters\Member\MemberCreate;
+use App\Filters\Member\MemberUpdate;
 use App\Filters\StripTags;
 use App\Filters\Team\TeamCreate;
 use App\Filters\Team\TeamUpdate;
@@ -38,6 +40,8 @@ class Filters extends BaseConfig
         'user_login' => UserLogin::class,
         'team_create' => TeamCreate::class,
         'team_update' => TeamUpdate::class,
+        'member_create' => MemberCreate::class,
+        'member_update' => MemberUpdate::class,
         'auth' => Auth::class,
         'baseInputFilter' => [
             Trim::class,
@@ -91,7 +95,7 @@ class Filters extends BaseConfig
      */
     public $filters = [
         'auth' => [
-            'before' => ['api/v1/users', 'api/v1/teams']
+            'before' => ['api/v1/users', 'api/v1/teams', 'api/v1/members']
         ],
         'user_create' => [
             'before' => ['api/v1/users']
@@ -104,6 +108,12 @@ class Filters extends BaseConfig
         ],
         'team_update' => [
             'before' => ['api/v1/teams/*']
+        ],
+        'member_create' => [
+            'before' => ['api/v1/members']
+        ],
+        'member_update' => [
+            'before' => ['api/v1/members/*']
         ],
     ];
 }

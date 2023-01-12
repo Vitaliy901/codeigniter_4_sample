@@ -51,6 +51,11 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\V1'], static function 
         'only' => 'index,create,show,update,delete',
         'placeholder' => '(:num)',
     ]);
+
+    $routes->resource('members', [
+        'only' => 'index,create,show,update,delete',
+        'placeholder' => '(:num)',
+    ]);
 });
 
 

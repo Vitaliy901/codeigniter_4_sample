@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Config;
+namespace App\BaseServices;
 
+use App\Entities\User;
 use App\Models\UserModel;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -9,7 +10,7 @@ use RuntimeException;
 
 class AuthManager
 {
-    private $user;
+    private User $user;
 
     public function __construct()
     {

@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Entities\Member;
 use CodeIgniter\Model;
 
-class TeamMemberModel extends Model
+class MemberModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'team_members';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
-    protected $returnType       = 'object';
+    protected $returnType       = Member::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [

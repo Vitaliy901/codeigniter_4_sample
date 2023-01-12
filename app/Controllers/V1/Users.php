@@ -2,6 +2,7 @@
 
 namespace App\Controllers\V1;
 
+use App\Entities\User;
 use CodeIgniter\RESTful\ResourceController;
 
 class Users extends ResourceController
@@ -28,9 +29,11 @@ class Users extends ResourceController
 
     public function create()
     {
-        $credetials = $this->request->getJSON(true);
-        $credetials['password'] = password_hash($credetials['password'], PASSWORD_DEFAULT);
-        $id = $this->model->insert($credetials);
+        service('authorization')->authorize('create', User::class);
+
+        $credentials = $this->request->getJSON(true);
+        $credentials['password'] = password_hash($credentials['password'], PASSWORD_DEFAULT);
+        $id = $this->model->insert($credentials);
 
         return $this->respond(['user' => $this->model->find($id)]);
     }
@@ -42,15 +45,18 @@ class Users extends ResourceController
 
     public function update($id = null)
     {
-        $credetials = $this->request->getJSON(true);
-        !isset($credetials['password']) ?: $credetials['password'] = password_hash($credetials['password'], PASSWORD_BCRYPT);
+        service('authorization')->authorize('update', User::class);
 
-        $this->model->update($id, $credetials);
+        $credentials = $this->request->getJSON(true);
+        !isset($credentials['password']) ?: $credentials['password'] = password_hash($credentials['password'], PASSWORD_BCRYPT);
+
+        $this->model->update($id, $credentials);
         return $this->respond(['user' => $this->model->find($id)]);
     }
 
     public function delete($id = null)
     {
+        service('authorization')->authorize('delete', User::class);
         $this->model->delete($id);
         return $this->response->setStatusCode(200)->setJSON([
             'user' => [],
