@@ -8,18 +8,10 @@ use App\Entities\User;
 
 class MemberPolicy
 {
-
     public function create(User $user)
     {
-        $member = model(UserModel::class)->getMemberByUser($user->id);
-        return $user->role === UserRoles::ADMIN || (!empty($member) && $member->role === UserRoles::HEAD);
-    }
-
-    public function show(User $user, Member $member)
-    {
         $userMember = model(UserModel::class)->getMemberByUser($user->id);
-        return $user->role === UserRoles::ADMIN ||
-            !empty($userMember) && $userMember->team_id === $member->team_id;
+        return $user->role === UserRoles::ADMIN || (!empty($userMember) && $userMember->role === UserRoles::HEAD);
     }
 
     public function update(User $user, Member $member)
@@ -29,7 +21,7 @@ class MemberPolicy
 
     public function delete(User $user, Member $member)
     {
-        $member = model(UserModel::class)->getMemberByUser($user->id);
-        return $user->role === UserRoles::ADMIN || (!empty($member) && $member->role === UserRoles::HEAD);
+        $userMember  = model(UserModel::class)->getMemberByUser($user->id);
+        return $user->role === UserRoles::ADMIN || (!empty($userMember ) && $userMember->role === UserRoles::HEAD);
     }
 }

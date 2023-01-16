@@ -2,6 +2,7 @@
 
 namespace App\Filters\Member;
 
+use App\Constants\UserRoles;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -26,12 +27,13 @@ class MemberCreate implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        $list = service('authManager')->auth()->role === UserRoles::ADMIN ? 'member, head': 'member';
         if ($request->getMethod() === 'post') {
             $validator = Services::validation();
             $rules = [
                 'team_id' => 'required|numeric',
                 'user_id' => 'required|numeric|is_unique[team_members.user_id]',
-                'role' => 'required|min_length[3]|max_length[100]|string|in_list[member,head]',
+                'role' => "required|min_length[3]|max_length[100]|string|in_list[$list]",
             ];
 
             if (!$validator->validate($rules, $request)) {
