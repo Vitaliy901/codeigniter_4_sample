@@ -14,50 +14,52 @@ class Members extends ResourceController
 
     public function index()
     {
-        service('authorization')->authorize('index', Member::class);
+        $user = service('authManager')->auth();
+        $member = model(UserModel::class)->getMemberByUser($user->id);
+        $builder = $user->role === UserRoles::ADMIN ?
+            $this->model : $this->model->where('team_id', $member->team_id);
+
         $per_page = $this->request->getGet('per_page');
-        $userModel = model(UserModel::class);
-        $memberModel = service('authManager')->auth()->role === UserRoles::ADMIN  ?  $this->model : $this->model->where('team_id', $userModel->member->id);
 
         $data = [
             'data' => [
-                'list' => $memberModel->paginate($per_page)
+                'list' => $builder->paginate($per_page)
             ],
-            'total' => $memberModel->pager->getTotal(),
-            'page' => $memberModel->pager->getCurrentPage(),
-            'per_page' => $memberModel->pager->getPerPage(),
-            'total_pages' => $memberModel->pager->getPageCount(),
+            'total' => $builder->pager->getTotal(),
+            'page' => $builder->pager->getCurrentPage(),
+            'per_page' => $builder->pager->getPerPage(),
+            'total_pages' => $builder->pager->getPageCount(),
         ];
         return $this->respond($data);
     }
 
     public function create()
     {
-        // to do...
-        service('authorization')->authorize('create', Member::class);
-        $credentials = $this->request->getJSON(true);
-        $id = $this->model->insert($credentials);
+        // Frozen...
 
-        return $this->respond(['team' => $this->model->find($id)]);
+        return $this->respond(['member' => $this->model->find($id)]);
     }
 
     public function show($id = null)
     {
-        // to do...
-        service('authorization')->authorize('show', Member::class);
-        return $this->respond(['teamMember' => $this->model->find($id)]);
+        $member = $this->model->find($id);
+        service('authorization')->authorize('show', $member);
+        return $this->respond(['member' => $member]);
     }
 
     public function update($id = null)
     {
-        service('authorization')->authorize('update', Member::class);
-        // to do...
+        // Frozen...
     }
 
     public function delete($id = null)
     {
-        // to do...
         service('authorization')->authorize('delete', Member::class);
-        return $this->response->setStatusCode(200)->setJSON(['teamMember' => $id]);
+
+        $this->model->delete($id);
+        return $this->response->setStatusCode(200)->setJSON([
+            'member' => [],
+            'status' => 'Success',
+        ]);
     }
 }

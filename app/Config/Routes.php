@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Controllers\V1\AuthController;
+use App\Controllers\V1\Members;
 
 // Create a new instance of our RouteCollection class.
 
@@ -53,9 +54,10 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\V1'], static function 
     ]);
 
     $routes->resource('members', [
-        'only' => 'index,create,show,update,delete',
+        'only' => 'index,create,show,delete',
         'placeholder' => '(:num)',
     ]);
+    $routes->patch('members/change_role/(:num)', [Members::class, 'update']);
 });
 
 

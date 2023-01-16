@@ -21,7 +21,8 @@ class TeamPolicy
     public function show(User $user, Team $team)
     {
         $member = model(UserModel::class)->getMemberByUser($user->id);
-        return $user->role === UserRoles::ADMIN || (!empty($member) && $member->role === UserRoles::HEAD && $team->id === $member->team_id);
+        return $user->role === UserRoles::ADMIN ||
+            !empty($member) && $team->id === $member->team_id;
     }
 
     public function update(User $user, Team $team)

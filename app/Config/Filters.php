@@ -113,7 +113,7 @@ class Filters extends BaseConfig
             'before' => ['api/v1/members']
         ],
         'member_update' => [
-            'before' => ['api/v1/members/*']
+            'before' => ['api/v1/members/change_role/*']
         ],
     ];
 }
