@@ -15,9 +15,9 @@ class Members extends ResourceController
     public function index()
     {
         $user = service('authManager')->auth();
-        $member = model(UserModel::class)->getMemberByUser($user->id);
+        $userMember = model(UserModel::class)->getMemberByUser($user->id);
         $builder = $user->role === UserRoles::ADMIN ?
-            $this->model : $this->model->where('team_id', $member->team_id);
+            $this->model : $this->model->where('team_id', $userMember->team_id);
 
         $per_page = $this->request->getGet('per_page');
 
@@ -35,15 +35,29 @@ class Members extends ResourceController
 
     public function create()
     {
-        // Frozen...
+        service('authorization')->authorize('create', Member::class);
+        $credentials = $this->request->getJSON(true);
+        $user = service('authManager')->auth();
 
+        $db = \Config\Database::connect();
+        $db->transStart();
+        if ($user->role === UserRoles::ADMIN && $credentials['role'] === UserRoles::HEAD) {
+            $this->model->where('team_id', $credentials['team_id'])
+                ->set('role', UserRoles::MEMBER)
+                ->update();
+        }
+        $id = $this->model->insert($credentials);
+        $db->transComplete();
         return $this->respond(['member' => $this->model->find($id)]);
     }
 
     public function show($id = null)
     {
-        $member = $this->model->find($id);
-        service('authorization')->authorize('show', $member);
+        $user = service('authManager')->auth();
+        $userMember = model(UserModel::class)->getMemberByUser($user->id);
+        $member = $user->role === UserRoles::ADMIN ?
+            $this->model->find($id) : $this->model->where('team_id', $userMember->team_id)->where('id', $id)->first();
+
         return $this->respond(['member' => $member]);
     }
 

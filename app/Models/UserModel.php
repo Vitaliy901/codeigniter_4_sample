@@ -45,7 +45,7 @@ class UserModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public Member $member;
+    public ?Member $member;
 
     public function getMemberByUser(int $id)
     {
