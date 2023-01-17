@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\UserRoles;
 use App\Entities\Member;
 use CodeIgniter\Model;
 
@@ -40,4 +41,10 @@ class MemberModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function updateRole(int $team_id) {
+        $this->builder->where('team_id', $team_id)
+            ->set('role', UserRoles::MEMBER)
+            ->update();
+    }
 }

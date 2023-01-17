@@ -31,7 +31,7 @@ class MemberUpdate implements FilterInterface
         if ($request->getMethod() === 'put' || $request->getMethod() === 'patch') {
             $validator = Services::validation();
             $rules = [
-                'role' => ['required', 'min_length[3]', 'max_length[100]', 'string', 'in_list[member,head]', "is_unique[team_members.role,id,{$id}]"],
+                'role' => ['required', 'min_length[3]', 'max_length[100]', 'string', 'in_list[member,head]'],
             ];
             $currentRules = array_intersect_key($rules, $request->getJSON(true));
 

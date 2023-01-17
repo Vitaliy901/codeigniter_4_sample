@@ -42,9 +42,7 @@ class Members extends ResourceController
         $db = \Config\Database::connect();
         $db->transStart();
         if ($user->role === UserRoles::ADMIN && $credentials['role'] === UserRoles::HEAD) {
-            $this->model->where('team_id', $credentials['team_id'])
-                ->set('role', UserRoles::MEMBER)
-                ->update();
+            $this->model->updateRole($credentials['team_id']);
         }
         $id = $this->model->insert($credentials);
         $db->transComplete();
@@ -63,12 +61,25 @@ class Members extends ResourceController
 
     public function update($id = null)
     {
-        // Frozen...
+        $requestedMember = $this->model->find($id);
+        service('authorization')->authorize('update', $requestedMember);
+        $credentials = $this->request->getJSON(true);
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        if ($credentials['role'] === UserRoles::HEAD) {
+            $this->model->updateRole($requestedMember->team_id);
+        }
+        $this->model->update($id, $credentials);
+        $db->transComplete();
+
+        return $this->respond(['member' => $this->model->find($id)]);
     }
 
     public function delete($id = null)
     {
-        service('authorization')->authorize('delete', Member::class);
+        $requestedMember = $this->model->find($id);
+        service('authorization')->authorize('delete', $requestedMember);
 
         $this->model->delete($id);
         return $this->response->setStatusCode(200)->setJSON([
