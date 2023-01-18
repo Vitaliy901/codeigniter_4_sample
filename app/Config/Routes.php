@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Controllers\PageController;
 use App\Controllers\V1\AuthController;
 use App\Controllers\V1\Members;
 
@@ -40,6 +41,8 @@ $routes->set404Override();*/
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->group('api/v1', ['namespace' => 'App\Controllers\V1'], static function ($routes) {
+    $routes->get('documentation', [PageController::class, 'documentation']);
+
     $routes->post('auth/register', [AuthController::class, 'register'], ['filter' => 'user_register']);
     $routes->post('auth/login', [AuthController::class, 'login'], ['filter' => 'user_login']);
 
