@@ -5,9 +5,32 @@ namespace App\Controllers\V1;
 use App\Controllers\BaseController;
 use App\Models\UserModel;
 use Firebase\JWT\JWT;
+use OpenApi\Attributes as OA;
 
 class AuthController extends BaseController
 {
+    #[OA\Post(
+        path: "/api/v1/auth/register",
+        operationId: "register",
+        summary: "Register user",
+        requestBody: new OA\RequestBody(required: true, content: [
+            new OA\JsonContent(ref: "#/components/schemas/RequestRegister"),
+        ]),
+        tags: ["auth"],
+        parameters: [new OA\Parameter(ref: "#/components/parameters/Locale")],
+        responses: [
+            new OA\Response(response: 200, description: "", content: [
+                new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "status", type: "string"),
+                        new OA\Property(property: "data", ref: "#/components/schemas/ResourceSuccess"),
+                    ]
+                ),
+            ]),
+            new OA\Response(ref: "#/components/responses/403", response: 403),
+            new OA\Response(ref: "#/components/responses/500", response: 500),
+        ]
+    )]
     public function register()
     {
         $credentials = $this->request->getJSON(true);
@@ -21,6 +44,29 @@ class AuthController extends BaseController
             'status' => 'Success',
         ]);
     }
+    #[OA\Post(
+        path: "/api/v1/auth/login",
+        operationId: "login",
+        summary: "Login user",
+        requestBody: new OA\RequestBody(required: true, content: [
+            new OA\JsonContent(ref: "#/components/schemas/RequestLogin"),
+        ]),
+        tags: ["auth"],
+        parameters: [new OA\Parameter(ref: "#/components/parameters/Locale")],
+        responses: [
+            new OA\Response(response: 200, description: "", content: [
+                new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "status", type: "string"),
+                        new OA\Property(property: "data", ref: "#/components/schemas/ResourceAuthToken"),
+                    ]
+                ),
+            ]),
+            new OA\Response(ref: "#/components/responses/404", response: 404),
+            new OA\Response(ref: "#/components/responses/403", response: 403),
+            new OA\Response(ref: "#/components/responses/500", response: 500),
+        ]
+    )]
     public function login()
     {
         $credentials = $this->request->getJSON(true);
@@ -38,7 +84,7 @@ class AuthController extends BaseController
                 $jwt = JWT::encode($payload, $key, 'HS256');
 
                 return $this->response->setJSON([
-                    'token' =>  $jwt,
+                    'access_token' =>  $jwt,
                     'status' => 'Success',
                 ]);
             }

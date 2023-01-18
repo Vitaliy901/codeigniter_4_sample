@@ -7,7 +7,162 @@ servers:
   -
     url: 'http://localhost/'
     description: 'Local Server'
+paths:
+  /api/v1/auth/register:
+    post:
+      tags:
+        - auth
+      summary: 'Register user'
+      operationId: register
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestRegister'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  data: { $ref: '#/components/schemas/ResourceSuccess' }
+                type: object
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+  /api/v1/auth/login:
+    post:
+      tags:
+        - auth
+      summary: 'Login user'
+      operationId: login
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestLogin'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  data: { $ref: '#/components/schemas/ResourceAuthToken' }
+                type: object
+        '404':
+          $ref: '#/components/responses/404'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
 components:
+  schemas:
+    RequestLogin:
+      properties:
+        email:
+          type: string
+          example: example@gmail.com
+        password:
+          type: string
+          example: password123
+      type: object
+    ResourceAuthToken:
+      properties:
+        access_token:
+          type: string
+      type: object
+    RequestRegister:
+      properties:
+        email:
+          type: string
+          example: example@gmail.com
+        password:
+          type: string
+          example: password123
+        first_name:
+          type: string
+          example: Bob
+        last_name:
+          type: string
+          example: Marley
+      type: object
+    ResourceSuccess:
+      type: array
+      items:
+        type: string
+    HttpErrorCommon:
+      properties:
+        status:
+          type: number
+        title:
+          type: string
+        data:
+          type: array
+          items: {  }
+      type: object
+  responses:
+    '200':
+      description: Success
+    '400':
+      description: 'Bad Request'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpErrorCommon'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpErrorCommon'
+    '404':
+      description: 'Not Found'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpErrorCommon'
+    '403':
+      description: 'Validation error.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpErrorCommon'
+    '500':
+      description: 'Server error.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpErrorCommon'
+  parameters:
+    Locale:
+      name: Accept-Langueage
+      in: header
+      description: Responses
+      allowEmptyValue: true
+      example: en-US
+    Pagination_page:
+      name: page
+      in: query
+      allowEmptyValue: true
+      example: '1'
+    Pagination_per_page:
+      name: per_page
+      in: query
+      allowEmptyValue: true
+      example: '20'
   securitySchemes:
     bearerAuth:
       type: http
