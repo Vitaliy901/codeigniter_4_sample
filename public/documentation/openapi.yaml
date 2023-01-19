@@ -68,6 +68,137 @@ paths:
           $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
+  api/v1/teams:
+    get:
+      tags:
+        - teams
+      summary: 'Get list of teams'
+      operationId: teamsListing
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+        -
+          $ref: '#/components/parameters/Pagination_page'
+        -
+          $ref: '#/components/parameters/Pagination_per_page'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+      security:
+        -
+          bearerAuth: []
+    post:
+      tags:
+        - teams
+      summary: 'Create Team'
+      operationId: createTeam
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCreateTeam'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+  'api/v1/teams/{teamId}':
+    get:
+      tags:
+        - teams
+      summary: 'Team information'
+      operationId: showTeam
+      parameters:
+        -
+          name: teamId
+          in: path
+          description: 'Team ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+    delete:
+      tags:
+        - teams
+      summary: 'Delete team'
+      operationId: deleteTeam
+      parameters:
+        -
+          name: teamId
+          in: path
+          description: 'Team ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      responses:
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+    patch:
+      tags:
+        - teams
+      summary: 'Update team'
+      operationId: updateTeam
+      parameters:
+        -
+          name: teamId
+          in: path
+          description: 'Team ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestUpdateTeam'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
   api/v1/admin/users:
     get:
       tags:
@@ -199,6 +330,24 @@ paths:
           bearerAuth: []
 components:
   schemas:
+    RequestCreateTeam:
+      properties:
+        name:
+          type: string
+          example: 'Some name of team'
+        url:
+          type: string
+          example: 'https://example.com'
+      type: object
+    RequestUpdateTeam:
+      properties:
+        name:
+          type: string
+          example: 'Some name of team'
+        url:
+          type: string
+          example: 'https://example.com'
+      type: object
     RequestCreateUser:
       properties:
         email:
