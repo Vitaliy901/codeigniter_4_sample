@@ -68,6 +68,140 @@ paths:
           $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
+  api/v1/members:
+    get:
+      tags:
+        - members
+      summary: 'Get list of members'
+      operationId: membersListing
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+        -
+          $ref: '#/components/parameters/Pagination_page'
+        -
+          $ref: '#/components/parameters/Pagination_per_page'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+      security:
+        -
+          bearerAuth: []
+    post:
+      tags:
+        - members
+      summary: 'Create member'
+      operationId: createMember
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCreateMember'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+  'api/v1/members/{memberId}':
+    get:
+      tags:
+        - members
+      summary: 'Мember information'
+      operationId: showMember
+      parameters:
+        -
+          name: memberId
+          in: path
+          description: 'Member ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+    delete:
+      tags:
+        - members
+      summary: 'Delete member'
+      operationId: deleteMember
+      parameters:
+        -
+          name: memberId
+          in: path
+          description: 'Member ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      responses:
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+  'api/v1/members/change_role/{memberId}':
+    patch:
+      tags:
+        - members
+      summary: 'Update member'
+      operationId: updateMember
+      parameters:
+        -
+          name: memberId
+          in: path
+          description: 'Member ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestUpdateMember'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
   api/v1/teams:
     get:
       tags:
@@ -104,6 +238,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/200'
+        '401':
+          $ref: '#/components/responses/401'
         '403':
           $ref: '#/components/responses/403'
         '500':
@@ -330,6 +466,28 @@ paths:
           bearerAuth: []
 components:
   schemas:
+    RequestCreateMember:
+      properties:
+        team_id:
+          type: integer
+          example: '1'
+        user_id:
+          type: integer
+          example: '1'
+        role:
+          type: string
+          enum:
+            - head
+            - member
+      type: object
+    RequestUpdateMember:
+      properties:
+        role:
+          type: string
+          enum:
+            - head
+            - member
+      type: object
     RequestCreateTeam:
       properties:
         name:

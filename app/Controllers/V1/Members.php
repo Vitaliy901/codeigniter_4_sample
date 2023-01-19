@@ -6,12 +6,28 @@ use App\Constants\UserRoles;
 use App\Entities\Member;
 use App\Models\UserModel;
 use CodeIgniter\RESTful\ResourceController;
+use OpenApi\Attributes as OA;
 
 class Members extends ResourceController
 {
     protected $modelName = 'App\Models\MemberModel';
     protected $format = 'json';
 
+    #[OA\Get(
+        path: "api/v1/members",
+        operationId: "membersListing",
+        summary: "Get list of members",
+        security: [["bearerAuth" => []]],
+        tags: ["members"],
+        parameters: [
+            new OA\Parameter(ref: "#/components/parameters/Locale"),
+            new OA\Parameter(ref: "#/components/parameters/Pagination_page"),
+            new OA\Parameter(ref: "#/components/parameters/Pagination_per_page"),
+        ],
+        responses: [
+            new OA\Response(ref: "#/components/responses/200", response: 200),
+        ]
+    )]
     public function index()
     {
         $user = service('authManager')->auth();
@@ -33,6 +49,24 @@ class Members extends ResourceController
         return $this->respond($data);
     }
 
+    #[OA\Post(
+        path: "api/v1/members",
+        operationId: "createMember",
+        summary: "Create member",
+        security: [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(required: true, content: [
+            new OA\JsonContent(ref: "#/components/schemas/RequestCreateMember")]),
+        tags: ["members"],
+        parameters: [
+            new OA\Parameter(ref: "#/components/parameters/Locale"),
+        ],
+        responses: [
+            new OA\Response(ref: "#/components/responses/200", response: 200),
+            new OA\Response(ref: "#/components/responses/401", response: 401),
+            new OA\Response(ref: "#/components/responses/403", response: 403),
+            new OA\Response(ref: "#/components/responses/500", response: 500),
+        ]
+    )]
     public function create()
     {
         service('authorization')->authorize('create', Member::class);
@@ -49,6 +83,23 @@ class Members extends ResourceController
         return $this->respond(['member' => $this->model->find($id)]);
     }
 
+    #[OA\Get(
+        path: "api/v1/members/{memberId}",
+        operationId: 'showMember',
+        summary: "Мember information",
+        security: [["bearerAuth" => []]],
+        tags: ["members"],
+        parameters: [
+            new OA\Parameter(name: "memberId", description: "Member ID", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+            new OA\Parameter(ref: "#/components/parameters/Locale"),
+        ],
+        responses: [
+            new OA\Response(ref: "#/components/responses/200", response: 200),
+            new OA\Response(ref: "#/components/responses/401", response: 401),
+            new OA\Response(ref: "#/components/responses/404", response: 404),
+            new OA\Response(ref: "#/components/responses/500", response: 500),
+        ]
+    )]
     public function show($id = null)
     {
         $user = service('authManager')->auth();
@@ -59,6 +110,26 @@ class Members extends ResourceController
         return $this->respond(['member' => $member]);
     }
 
+    #[OA\Patch(
+        path: "api/v1/members/change_role/{memberId}",
+        operationId: 'updateMember',
+        summary: "Update member",
+        security: [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(required: true, content: [
+            new OA\JsonContent(ref: "#/components/schemas/RequestUpdateMember")]),
+        tags: ["members"],
+        parameters: [
+            new OA\Parameter(name: "memberId", description: "Member ID", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+            new OA\Parameter(ref: "#/components/parameters/Locale"),
+        ],
+        responses: [
+            new OA\Response(ref: "#/components/responses/200", response: 200),
+            new OA\Response(ref: "#/components/responses/401", response: 401),
+            new OA\Response(ref: "#/components/responses/403", response: 403),
+            new OA\Response(ref: "#/components/responses/404", response: 404),
+            new OA\Response(ref: "#/components/responses/500", response: 500),
+        ]
+    )]
     public function update($id = null)
     {
         $requestedMember = $this->model->find($id);
@@ -76,6 +147,22 @@ class Members extends ResourceController
         return $this->respond(['member' => $this->model->find($id)]);
     }
 
+    #[OA\Delete(
+        path: "api/v1/members/{memberId}",
+        operationId: 'deleteMember',
+        summary: "Delete member",
+        security: [["bearerAuth" => []]],
+        tags: ["members"],
+        parameters: [
+            new OA\Parameter(name: "memberId", description: "Member ID", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+            new OA\Parameter(ref: "#/components/parameters/Locale"),
+        ],
+        responses: [
+            new OA\Response(ref: "#/components/responses/401", response: 401),
+            new OA\Response(ref: "#/components/responses/404", response: 404),
+            new OA\Response(ref: "#/components/responses/500", response: 500),
+        ]
+    )]
     public function delete($id = null)
     {
         $requestedMember = $this->model->find($id);

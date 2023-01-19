@@ -57,6 +57,7 @@ class Teams extends ResourceController
         ],
         responses: [
             new OA\Response(ref: "#/components/responses/200", response: 200),
+            new OA\Response(ref: "#/components/responses/401", response: 401),
             new OA\Response(ref: "#/components/responses/403", response: 403),
             new OA\Response(ref: "#/components/responses/500", response: 500),
         ]

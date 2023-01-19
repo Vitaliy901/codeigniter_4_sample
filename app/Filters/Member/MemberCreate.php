@@ -7,27 +7,22 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
+use OpenApi\Attributes as OA;
 
 class MemberCreate implements FilterInterface
 {
-    /**
-     * Do whatever processing this filter needs to do.
-     * By default it should not return anything during
-     * normal execution. However, when an abnormal state
-     * is found, it should return an instance of
-     * CodeIgniter\HTTP\Response. If it does, script
-     * execution will end and that Response will be
-     * sent back to the client, allowing for error pages,
-     * redirects, etc.
-     *
-     * @param RequestInterface $request
-     * @param array|null       $arguments
-     *
-     * @return mixed
-     */
+    #[OA\Schema(
+        schema: "RequestCreateMember",
+        properties: [
+            new OA\Property(property: "team_id", type: "integer", example: "1"),
+            new OA\Property(property: "user_id", type: "integer", example: "1"),
+            new OA\Property(property: "role", type: "string", enum: ["head", "member"]),
+        ],
+        type: "object"
+    )]
     public function before(RequestInterface $request, $arguments = null)
     {
-        $list = service('authManager')->auth()->role === UserRoles::ADMIN ? 'member, head': 'member';
+        $list = service('authManager')->auth()->role === UserRoles::ADMIN ? 'member, head' : 'member';
         if ($request->getMethod() === 'post') {
             $validator = Services::validation();
             $rules = [
@@ -54,9 +49,9 @@ class MemberCreate implements FilterInterface
      * to stop execution of other after filters, short of
      * throwing an Exception or Error.
      *
-     * @param RequestInterface  $request
+     * @param RequestInterface $request
      * @param ResponseInterface $response
-     * @param array|null        $arguments
+     * @param array|null $arguments
      *
      * @return mixed
      */
