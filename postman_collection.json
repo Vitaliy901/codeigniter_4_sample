@@ -21,19 +21,20 @@
 							}
 						],
 						"url": {
-							"raw": "localhost/api/v1/users?page=2&per_page=2&order=asc",
+							"raw": "localhost/api/v1/admin/users?page=1&per_page=2&order=asc",
 							"host": [
 								"localhost"
 							],
 							"path": [
 								"api",
 								"v1",
+								"admin",
 								"users"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "2"
+									"value": "1"
 								},
 								{
 									"key": "per_page",
@@ -60,15 +61,16 @@
 							}
 						],
 						"url": {
-							"raw": "localhost/api/v1/users/29",
+							"raw": "localhost/api/v1/admin/users/1",
 							"host": [
 								"localhost"
 							],
 							"path": [
 								"api",
 								"v1",
+								"admin",
 								"users",
-								"29"
+								"1"
 							]
 						}
 					},
@@ -95,13 +97,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost/api/v1/users",
+							"raw": "localhost/api/v1/admin/users",
 							"host": [
 								"localhost"
 							],
 							"path": [
 								"api",
 								"v1",
+								"admin",
 								"users"
 							]
 						}
@@ -129,13 +132,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost/api/v1/users/29",
+							"raw": "localhost/api/v1/admin/users/29",
 							"host": [
 								"localhost"
 							],
 							"path": [
 								"api",
 								"v1",
+								"admin",
 								"users",
 								"29"
 							]
@@ -155,13 +159,14 @@
 							}
 						],
 						"url": {
-							"raw": "localhost/api/v1/users/2",
+							"raw": "localhost/api/v1/admin/users/2",
 							"host": [
 								"localhost"
 							],
 							"path": [
 								"api",
 								"v1",
+								"admin",
 								"users",
 								"2"
 							]
@@ -317,7 +322,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Team 2\",\n    \"url\": \"http://example2.com\"\n}",
+							"raw": "{\n    \"name\": \"Team 1\",\n    \"url\": \"http://example.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -640,7 +645,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0LyIsImV4cCI6MTY3NDQ5MjMxNywiaWQiOiIxIn0.CqSCAdMzJluVn8hff3qtgpbk6RgDC34o7MhGIFV1NHY",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiZXhwIjoxNjc0NzE3MzYzLCJpZCI6IjEifQ.PpJf6PQYlHPUcrtmNPjzrIssEijG12qidtcuy9iKfLA",
 				"type": "string"
 			}
 		]

@@ -46,10 +46,13 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\V1'], static function 
     $routes->post('auth/register', [AuthController::class, 'register'], ['filter' => 'user_register']);
     $routes->post('auth/login', [AuthController::class, 'login'], ['filter' => 'user_login']);
 
-    $routes->resource('users', [
-        'only' => 'index,create,show,update,delete',
-        'placeholder' => '(:num)',
-    ]);
+    $routes->group('admin', static function ($routes) {
+
+        $routes->resource('users', [
+            'only' => 'index,create,show,update,delete',
+            'placeholder' => '(:num)',
+        ]);
+    });
 
     $routes->resource('teams', [
         'only' => 'index,create,show,update,delete',

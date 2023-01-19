@@ -39,13 +39,6 @@ class UserLogin implements FilterInterface
         return $request;
     }
 
-    #[OA\Schema(
-        schema: "ResourceAuthToken",
-        properties: [
-            new OA\Property(property: "access_token", type: "string"),
-        ],
-        type: "object"
-    )]
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         //

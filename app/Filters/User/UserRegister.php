@@ -43,11 +43,6 @@ class UserRegister implements FilterInterface
         return $request;
     }
 
-    #[OA\Schema(
-        schema: "ResourceSuccess",
-        type: "array",
-        items: new OA\Items(type: "string"),
-    )]
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         //

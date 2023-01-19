@@ -22,14 +22,14 @@ class Authorization
     {
         $this->authUser = service('authManager')->auth();
     }
-    public function authorize(string $method, Entity|string $model)
+    public function authorize(string $method, Entity|string $entity)
     {
-        $className = is_object($model) ? get_class($model) : $model;
+        $className = is_object($entity) ? get_class($entity) : $entity;
 
         foreach ($this->policies as $key => $value) {
             if ($key === $className) {
                 $policy = new $value;
-                $policy->{$method}($this->authUser, !is_object($model) ?: $model) ?: throw new AlertError('Unauthorized', 401);
+                $policy->{$method}($this->authUser, !is_object($entity) ?: $entity) ?: throw new AlertError('Unauthorized', 401);
                 return;
             }
         }

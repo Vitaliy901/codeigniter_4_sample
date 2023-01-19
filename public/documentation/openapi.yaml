@@ -68,8 +68,157 @@ paths:
           $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
+  api/v1/admin/users:
+    get:
+      tags:
+        - users
+      summary: 'Get list of users'
+      operationId: usersListing
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+        -
+          $ref: '#/components/parameters/Pagination_page'
+        -
+          $ref: '#/components/parameters/Pagination_per_page'
+      responses:
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+    post:
+      tags:
+        - users
+      summary: 'Create user'
+      operationId: createUser
+      parameters:
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCreateUser'
+      responses:
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+  'api/v1/admin/users/{userId}':
+    get:
+      tags:
+        - users
+      summary: 'User information'
+      operationId: showUser
+      parameters:
+        -
+          name: userId
+          in: path
+          description: 'User ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      responses:
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+    delete:
+      tags:
+        - users
+      summary: 'Delete user'
+      operationId: deleteUser
+      parameters:
+        -
+          name: userId
+          in: path
+          description: 'User ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      responses:
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
+    patch:
+      tags:
+        - users
+      summary: 'Update user'
+      operationId: updateUser
+      parameters:
+        -
+          name: userId
+          in: path
+          description: 'User ID'
+          required: true
+          schema:
+            type: integer
+        -
+          $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestUpdateUser'
+      responses:
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+        -
+          bearerAuth: []
 components:
   schemas:
+    RequestCreateUser:
+      properties:
+        email:
+          type: string
+          example: example@gmail.com
+        password:
+          type: string
+          example: password123
+        first_name:
+          type: string
+          example: Bob
+        last_name:
+          type: string
+          example: Marley
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+      type: object
     RequestLogin:
       properties:
         email:
@@ -78,11 +227,6 @@ components:
         password:
           type: string
           example: password123
-      type: object
-    ResourceAuthToken:
-      properties:
-        access_token:
-          type: string
       type: object
     RequestRegister:
       properties:
@@ -99,10 +243,23 @@ components:
           type: string
           example: Marley
       type: object
-    ResourceSuccess:
-      type: array
-      items:
-        type: string
+    RequestUpdateUser:
+      properties:
+        password:
+          type: string
+          example: password123
+        first_name:
+          type: string
+          example: Bob
+        last_name:
+          type: string
+          example: Marley
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+      type: object
     HttpErrorCommon:
       properties:
         status:
@@ -113,6 +270,15 @@ components:
           type: array
           items: {  }
       type: object
+    ResourceAuthToken:
+      properties:
+        access_token:
+          type: string
+      type: object
+    ResourceSuccess:
+      type: array
+      items:
+        type: string
   responses:
     '200':
       description: Success

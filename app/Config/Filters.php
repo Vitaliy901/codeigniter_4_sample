@@ -95,7 +95,7 @@ class Filters extends BaseConfig
      */
     public $filters = [
         'auth' => [
-            'before' => ['api/v1/users', 'api/v1/teams', 'api/v1/members']
+            'before' => ['api/v1/admin/users', 'api/v1/teams', 'api/v1/members']
         ],
         'user_create' => [
             'before' => ['api/v1/users']

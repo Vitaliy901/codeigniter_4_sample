@@ -6,24 +6,20 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
+use OpenApi\Attributes as OA;
 
 class UserUpdate implements FilterInterface
 {
-    /**
-     * Do whatever processing this filter needs to do.
-     * By default it should not return anything during
-     * normal execution. However, when an abnormal state
-     * is found, it should return an instance of
-     * CodeIgniter\HTTP\Response. If it does, script
-     * execution will end and that Response will be
-     * sent back to the client, allowing for error pages,
-     * redirects, etc.
-     *
-     * @param RequestInterface $request
-     * @param array|null       $arguments
-     *
-     * @return mixed
-     */
+    #[OA\Schema(
+        schema: "RequestUpdateUser",
+        properties: [
+            new OA\Property(property: "password", type: "string", example: "password123"),
+            new OA\Property(property: "first_name", type: "string", example: "Bob"),
+            new OA\Property(property: "last_name", type: "string", example: "Marley"),
+            new OA\Property(property: "role", type: "string", enum: ["admin", "user"]),
+        ],
+        type: "object"
+    )]
     public function before(RequestInterface $request, $arguments = null)
     {
         $segments = $request->getUri()->getSegments();

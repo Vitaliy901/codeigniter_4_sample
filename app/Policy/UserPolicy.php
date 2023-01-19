@@ -7,17 +7,7 @@ use App\Entities\User;
 
 class UserPolicy
 {
-    public function create(User $user)
-    {
-        return $user->role === UserRoles::ADMIN;
-    }
-
-    public function update(User $user)
-    {
-        return $user->role === UserRoles::ADMIN;
-    }
-
-    public function delete(User $user)
+    public function main(User $user)
     {
         return $user->role === UserRoles::ADMIN;
     }
