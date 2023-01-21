@@ -35,12 +35,12 @@ class AuthController extends BaseController
     {
         $credentials = $this->request->getJSON(true);
         $credentials['password'] = password_hash($credentials['password'], PASSWORD_DEFAULT);
-        $user = model(UserModel::class);
+        $userModel = model(UserModel::class);
 
-        $id = $user->insert($credentials);
+        $id = $userModel->insert($credentials);
 
         return $this->response->setJSON([
-            'user' =>  $user->find($id),
+            'user' =>  $userModel->find($id),
             'status' => 'Success',
         ]);
     }

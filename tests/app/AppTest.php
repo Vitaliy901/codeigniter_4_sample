@@ -10,7 +10,7 @@ abstract class AppTest extends CIUnitTestCase
     use ControllerTestTrait, DatabaseTestTrait;
     // For Migrations
     protected $migrate     = true;
-    protected $migrateOnce = true;
+    protected $migrateOnce = false;
     protected $refresh     = true;
     protected $db;
 
@@ -18,12 +18,5 @@ abstract class AppTest extends CIUnitTestCase
     {
         parent::setUp();
         $this->db = \Config\Database::connect('tests');
-        $this->db->transBegin();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->db->transRollback();
     }
 }

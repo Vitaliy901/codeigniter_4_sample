@@ -5,9 +5,6 @@ namespace App\Cases\Controller;
 use App\AppTest;
 use App\Entities\User;
 use App\Models\UserModel;
-use CodeIgniter\Model;
-use CodeIgniter\Test\ControllerTestTrait;
-use CodeIgniter\Test\DatabaseTestTrait;
 use Tests\Support\Fixtures\UsersFixture;
 
 class AuthControllerTest extends AppTest
